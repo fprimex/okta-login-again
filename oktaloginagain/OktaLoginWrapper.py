@@ -111,7 +111,17 @@ class OktaSession(object):
                 print("{} seconds remaining before timeout.".format(timer))
                 time.sleep(2)
                 response = self.okta_session.post(url_push, data=json.dumps(auth_params))
-                mfa_state = json.loads(response.text).get('status')
+                mfa = json.loads(response.text)
+                mfa_state = mfa['status']
+                mfa_ans = mfa.get('_embedded', False)
+                if mfa_ans:
+                    mfa_ans = mfa_ans.get('factor', False)
+                    if mfa_ans:
+                       mfa_ans = mfa_ans.get('_embedded', False)
+                if not mfa_ans:
+                    print("mfa answer not available; approve sign in request to continue")
+                else:
+                    print("mfa answer: {}".format(mfa['_embedded']['factor']['_embedded']['challenge']['correctAnswer']))
                 if json.loads(response.text).get('factorResult') == 'REJECTED':
                     self.okta_session.close()
                     return "You rejected the connection, closing the session."
@@ -187,7 +197,7 @@ class OktaSession(object):
         app_name = input('app name: ').lower()
         results = [{'name': i.get('label'), 'link': i.get('linkUrl')} for i in self.app_list() if app_name in i.get('label').lower()]
         for ind, app in enumerate(results):
-            print("{} - {}".format(ind, app.get('name')))
+            print("{} - {} - {}".format(ind, app.get('name'), app.get('link')))
         choice = int(input('Please select the app to connect to: '))
         app_link = results[choice].get('link')
         return self.connect_to(app_link)

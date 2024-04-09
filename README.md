@@ -1,4 +1,6 @@
-# Okta Login Wrapper
+# Okta Login Wrapper - Again
+
+This is a continuation of OktaLoginWrapper that supports MFA that has a confirmation number. The original is archived on [GH](https://github.com/B-Souty/OktaLoginWrapper). The main purpose is to support this kind of login in [zdeskcfg](https://github.com/fprimex/zdeskcfg).
 
 Provide an easy way for your scripts to access ressources behind an Okta SSO solution, without the need for an API token.
 
@@ -9,13 +11,15 @@ Provide an easy way for your scripts to access ressources behind an Okta SSO sol
 
 ### Installing
 
-oktaloginwrapper is now available on Pypi. Simply install it with:
+Install it with:
 
-```pip install oktaloginwrapper```
+```pip install okta-login-again```
 
 ## Getting Started
 
 **\~WARNING\~ Currently the script only works if you have "push", "secret question" or "software token" enabled as MFA.**
+
+April 2024 - forked to add support for number based confirmation, which I think is considered a challenge question and answer. I'm not sure what else that supports or what is left to support. It might work with challenge questions too.
 
 The main goal of this script is to help you login to an application using SSO with Okta, without requiring any API token.
 
@@ -23,7 +27,7 @@ As part of another scripts, it allows you to have an okta_session object from wh
 
 Start by importing the module and instantiate an OktaSession object with your Okta instance/organization name.
 ```Python
-from oktaloginwrapper import OktaLoginWrapper as OLW
+from oktaloginagain import OktaLoginWrapper as OLW
 
 my_session = OLW.OktaSession(okta_instance) #Where okta_instance is https://<okta_instance>.okta.com
 ```
